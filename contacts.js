@@ -3,7 +3,7 @@ const contactsPath = "./db/contacts.json";
 
 const listContacts = async () => {
   const data = await fs.readFile(contactsPath);
-
+  console.table(JSON.parse(data));
   return JSON.parse(data);
 };
 
@@ -12,6 +12,7 @@ const getContactsById = async (contactID) => {
 
   data.filter((single) => {
     if (single.id.includes(contactID)) {
+      console.table(single);
       return single;
     } else {
       return false;
@@ -22,6 +23,8 @@ const getContactsById = async (contactID) => {
 const removeContact = async (contactID) => {
   const data = await listContacts();
   const newList = data.filter((contact) => contact.id != contactID);
+  console.table(newList);
+  return newList;
 };
 
 const addContact = async (name, email, phone) => {
@@ -33,6 +36,7 @@ const addContact = async (name, email, phone) => {
     phone: phone,
   };
   data.push(newContact);
+  console.table(data);
 };
 
 module.exports = {
