@@ -1,5 +1,12 @@
+const { log } = require("console");
+
 const fs = require(`fs`).promises;
 const contactsPath = "./db/contacts.json";
+
+const getContacts = async () =>{
+  const data = await fs.readFile(contactsPath);
+  return JSON.parse(data);
+}
 
 const listContacts = async () => {
   const data = await fs.readFile(contactsPath);
@@ -8,9 +15,9 @@ const listContacts = async () => {
 };
 
 const getContactsById = async (contactID) => {
-  const data = await listContacts();
+  const data = await getContacts();
 
-  data.filter((single) => {
+  data.find((single) => {
     if (single.id.includes(contactID)) {
       console.table(single);
       return single;
@@ -21,15 +28,17 @@ const getContactsById = async (contactID) => {
 };
 
 const removeContact = async (contactID) => {
-  const data = await listContacts();
-  const newList = data.filter((contact) => contact.id != contactID);
-  fs.writeFile(contactsPath, JSON.stringify(newList))
-  console.table(newList);
+  const data = await getContacts();
+  const newList = data.findIndex((contact)=> contact.id ==contactID)
+  data.splice(newList,1)
+  console.table(data);
+
+  fs.writeFile(contactsPath, JSON.stringify(data))
   return newList;
 };
 
 const addContact = async (name, email, phone) => {
-  const data = await listContacts();
+  const data = await getContacts();
   const newContact = {
     id: `${data.length + 1}`,
     name: name,
